@@ -12,11 +12,14 @@ class BoundingBoxClass
 	bool m_bInitialized; //Has the elements of this object been initialized before?
 	//float m_fRadius; //Radius of the collision Box
 	vector3 m_v3Centroid;//Center point of the model, the origin in GSpace in which the Box is going to be located
-	vector3 v3Max;
-	vector3 v3Min;
+	
+	
 	String m_sName;//Name of the BoundingBox(to relate to the instance)
 
 public:
+	vector3 v3Max;
+	vector3 v3Min;
+	vector3 absMax;
 	/* Constructor */
 	BoundingBoxClass(void);
 	/* Copy Constructor */

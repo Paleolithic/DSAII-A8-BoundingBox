@@ -59,8 +59,8 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 		std::vector<vector3> lVertices = pMeshMngr->GetVertices(m_sName);
 		unsigned int nVertices = lVertices.size();
 		m_v3Centroid = lVertices[0];
-		//vector3 v3Max(lVertices[0]);
-		//vector3 v3Min(lVertices[0]);
+		v3Max = lVertices[0];
+		v3Min = lVertices[0];
 		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++)
 		{
 			//m_v3Centroid += lVertices[nVertex];
@@ -92,9 +92,11 @@ void BoundingBoxClass::AddBoxToRenderList(matrix4 a_mModelToWorld, vector3 a_vCo
 	if(a_bRenderCentroid)
 		pMeshMngr->AddAxisToQueue(a_mModelToWorld * glm::translate(m_v3Centroid));
 
-	float x = glm::abs(v3Min.x) > glm::abs(v3Max.x) ? glm::abs(v3Min.x) : glm::abs(v3Max.x);
-	float y = glm::abs(v3Min.y) > glm::abs(v3Max.y) ? glm::abs(v3Min.y) : glm::abs(v3Max.y);
-	float z = glm::abs(v3Min.z) > glm::abs(v3Max.z) ? glm::abs(v3Min.z) : glm::abs(v3Max.z);
-
-	pMeshMngr->AddCubeToQueue(a_mModelToWorld * glm::translate(m_v3Centroid) * glm::scale(vector3(2*x, y, 2*z)), a_vColor, MERENDER::WIRE);
+	absMax.x = glm::abs(v3Min.x) > glm::abs(v3Max.x) ? glm::abs(v3Min.x) : glm::abs(v3Max.x);
+	absMax.y = glm::abs(v3Min.y) > glm::abs(v3Max.y) ? glm::abs(v3Min.y) : glm::abs(v3Max.y);
+	absMax.z = glm::abs(v3Min.z) > glm::abs(v3Max.z) ? glm::abs(v3Min.z) : glm::abs(v3Max.z);
+	
+	//absMax.x *= 2;
+	//absMax.z *= 2;
+	pMeshMngr->AddCubeToQueue(a_mModelToWorld * glm::translate(m_v3Centroid) * glm::scale(vector3(absMax.x,absMax.y,absMax.z)), a_vColor, MERENDER::WIRE);
 }
