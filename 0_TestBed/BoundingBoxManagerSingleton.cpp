@@ -137,12 +137,20 @@ void BoundingBoxManagerSingleton::CalculateCollision(void)
 			{
 				
 				//If the distance between the center of both Boxs is less than the sum of their radius there is a collision
-				if(glm::distance(lCentroid[i], lCentroid[j]) < (m_lBox[i]->absMax.x + m_lBox[j]->absMax.x)){
+				if(glm::distance(lCentroid[i].x, lCentroid[j].x) < (m_lBox[i]->absMax.x + m_lBox[j]->absMax.x) &&
+					glm::distance(lCentroid[i].y, lCentroid[j].y) < (m_lBox[i]->absMax.y + m_lBox[j]->absMax.y)/2 &&
+					glm::distance(lCentroid[i].z, lCentroid[j].z) < (m_lBox[i]->absMax.z + m_lBox[j]->absMax.z)/2){
 					std::cout << glm::distance(lCentroid[i], lCentroid[j]) << std::endl;
 					m_lColor[i] = m_lColor[j] = MERED; //We make the Boxs red
+
+
+					//if(m_lBox[i]->absMax.y <= m_lBox[j]->absMax.y){
+					//	std::cout <<"Working" << std::endl;
+					//	m_lColor[i] = m_lColor[j] = MERED; //We make the Boxs red
+					//}
 				}
-				//if(glm::distance(lCentroid[i], lCentroid[j]) < (m_lBox[i]->absMax.y + m_lBox[j]->absMax.y)){
-				//	std::cout << glm::distance(lCentroid[i], lCentroid[j]) << std::endl;
+				//if(glm::distance(lCentroid[i].y, lCentroid[j].y) < (m_lBox[i]->absMax.y + m_lBox[j]->absMax.y)){
+				//	std::cout << "In y" << std::endl;
 				//	m_lColor[i] = m_lColor[j] = MERED; //We make the Boxs red
 				//}
 			}
