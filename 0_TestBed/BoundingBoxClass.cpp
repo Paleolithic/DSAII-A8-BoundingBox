@@ -63,7 +63,6 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 		v3Min = lVertices[0];
 		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++)
 		{
-			//m_v3Centroid += lVertices[nVertex];
 			if(v3Min.x > lVertices[nVertex].x)
 				v3Min.x = lVertices[nVertex].x;
 			else if(v3Max.x < lVertices[nVertex].x)
@@ -81,6 +80,27 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 		}
 		m_v3Centroid = (v3Min + v3Max) / 2.0f;
 
+		//Find the distance between the middle x,y,z and the vertices x,y,z
+		fWidthX = glm::distance(m_v3Centroid.x, lVertices[0].x);
+		fWidthY = glm::distance(m_v3Centroid.y, lVertices[0].y);
+		fWidthZ = glm::distance(m_v3Centroid.z, lVertices[0].z);
+
+		//Loop through all vertices and find the greatest distance
+		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++){
+			//Find the max X distance
+			float fDistanceX = glm::distance(m_v3Centroid.x, lVertices[nVertex].x);
+			if(fWidthX < fDistanceX)
+				fWidthX = fDistanceX;
+			//Find the max Y distance
+			float fDistanceY = glm::distance(m_v3Centroid.y, lVertices[nVertex].y);
+			if(fWidthY < fDistanceY)
+				fWidthY = fDistanceY;
+			//Find the max Z distance
+			float fDistanceZ = glm::distance(m_v3Centroid.z, lVertices[nVertex].z);
+			if(fWidthZ < fDistanceZ)
+				fWidthZ = fDistanceZ;
+		}
+
 		m_bInitialized = true;
 	}
 }
@@ -92,11 +112,7 @@ void BoundingBoxClass::AddBoxToRenderList(matrix4 a_mModelToWorld, vector3 a_vCo
 	if(a_bRenderCentroid)
 		pMeshMngr->AddAxisToQueue(a_mModelToWorld * glm::translate(m_v3Centroid));
 
-	absMax.x = glm::abs(v3Min.x) > glm::abs(v3Max.x) ? glm::abs(v3Min.x) : glm::abs(v3Max.x);
-	absMax.y = glm::abs(v3Min.y) > glm::abs(v3Max.y) ? glm::abs(v3Min.y) : glm::abs(v3Max.y);
-	absMax.z = glm::abs(v3Min.z) > glm::abs(v3Max.z) ? glm::abs(v3Min.z) : glm::abs(v3Max.z);
-	
-	//absMax.x *= 2;
-	//absMax.z *= 2;
-	pMeshMngr->AddCubeToQueue(a_mModelToWorld * glm::translate(m_v3Centroid) * glm::scale(vector3(absMax.x,absMax.y,absMax.z)), a_vColor, MERENDER::WIRE);
+	//Setup matrix with all the info
+	matrix4 cubeMatrix = a_mModelToWorld * glm::translate(m_v3Centroid) * glm::scale(vector3(fWidthX*2.0f,fWidthY*2.0f,fWidthZ*2.0f));
+	pMeshMngr->AddCubeToQueue(cubeMatrix, a_vColor, MERENDER::WIRE);
 }

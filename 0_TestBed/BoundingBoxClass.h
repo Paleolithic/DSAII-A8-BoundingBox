@@ -19,7 +19,12 @@ class BoundingBoxClass
 public:
 	vector3 v3Max;
 	vector3 v3Min;
-	vector3 absMax;
+
+	float fWidthX;
+	float fWidthY;
+	float fWidthZ;
+
+
 	/* Constructor */
 	BoundingBoxClass(void);
 	/* Copy Constructor */
